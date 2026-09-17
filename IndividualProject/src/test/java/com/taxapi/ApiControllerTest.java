@@ -10,6 +10,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.springframework.http.MediaType;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -49,7 +57,56 @@ class ApiControllerTest {
     // via mockMvc.perform(...). Aim for >= 55% JaCoCo coverage overall.
 
     @Test
-    void contextLoads() {
-        // Placeholder so the test class is non-empty. Replace with real tests.
+    void createClientTest() throws Exception {
+        mockMvc.perform(post("/v1/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Jake\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void createItemTest() throws Exception {
+        mockMvc.perform(post("/v1/items")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"PS5\",\"category\":\"electronics\",\"basePrice\":600}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getItemsTest() throws Exception {
+        mockMvc.perform(get("/v1/items")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getItemByIdTest() throws Exception {
+        mockMvc.perform(get("/v1/items/item-1")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteItemTest() throws Exception {
+        mockMvc.perform(delete("/v1/items/item-1")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void calculateTaxTest() throws Exception {
+        mockMvc.perform(post("/v1/tax/quote")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"state\":\"CA\",\"price\":1000,\"category\":\"electronics\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getSupportedTest() throws Exception {
+        mockMvc.perform(get("/v1/supported")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isOk());
     }
 }

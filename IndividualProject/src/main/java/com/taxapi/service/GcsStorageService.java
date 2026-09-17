@@ -46,18 +46,21 @@ public final class GcsStorageService
             BlobId blobId =
                 BlobId.of(bucketName, fileName);
             if (storage.get(blobId) == null) {
-                InputStream is =
-                    getClass().getResourceAsStream(
-                        "/data/" + fileName
-                    );
-                byte[] content = is.readAllBytes();
-                BlobInfo blobInfo = BlobInfo
-                    .newBuilder(blobId)
-                    .setContentType(
-                        "application/json"
-                    )
-                    .build();
-                storage.create(blobInfo, content);
+                try (
+                        InputStream is =
+                                getClass().getResourceAsStream(
+                                        "/data/" + fileName
+                                )) {
+                    byte[] content = is.readAllBytes();
+
+                    BlobInfo blobInfo = BlobInfo
+                            .newBuilder(blobId)
+                            .setContentType(
+                                    "application/json"
+                            )
+                            .build();
+                    storage.create(blobInfo, content);
+                }
             }
         }
     }
