@@ -1,0 +1,15 @@
+Bug 1: The constructor in TaxApiApplication was misspelled as TaxApiApplicaton instead of TaxApiApplication. This caused a compilation error, preventing the application from starting.
+
+Bug 2: SpringApplication.run() statement in TaxApiApplication was missing a semicolon. This caused a compilation error, preventing the application from starting.
+
+Bug 3: ResponseEntity.ok(createdItem) statement in ApiController was missing a semicolon. This caused a compilation error, preventing the application from starting.
+
+Bug 4: Item.getId() in Item class returned the item's name instead of the ID.
+
+Bug 5: TaxApiService.createClient() had the nameExists condition as reversed causing issues with same name clients.
+
+Bug 6: TaxApiService.calculateTax() was calculating the taxAmount as price + price * rate when it should just be price * rate.
+
+Bug 7:GcsStorageService.initializeData() opened an InputStream to read  seed data file but didn't close, so used try-with-resources to close the InputStream.
+
+
