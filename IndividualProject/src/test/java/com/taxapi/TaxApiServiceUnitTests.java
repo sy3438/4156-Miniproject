@@ -81,6 +81,16 @@ class TaxApiServiceUnitTests {
     }
 
     @Test
+    void updateItemPriceTest() throws Exception {
+        var item = service.updateItemPrice(
+                "item-1",
+                500.00
+        );
+
+        assertEquals(500.00, item.getBasePrice());
+    }
+
+    @Test
     void getItemByIdTest() throws Exception {
         var item = service.getItemById("item-1");
         assertEquals("Laptop", item.getName());
