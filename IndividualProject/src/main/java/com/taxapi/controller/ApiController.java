@@ -1,5 +1,6 @@
 package com.taxapi.controller;
 
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -140,6 +141,37 @@ public final class ApiController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(item);
+    }
+
+    /**
+     * Updates an item's base price.
+     *
+     * @param apiKey the API key
+     * @param id the item ID
+     * @param item the new item with new price
+     * @return the updated item
+     * @throws IOException if an I/O error occurs
+     */
+    @PatchMapping("/items/{id}")
+    public ResponseEntity<Item> updateItemPrice(
+            @RequestHeader("X-API-Key")
+            final String apiKey,
+            @PathVariable final String id,
+            @RequestBody final Item item
+    ) throws IOException {
+        if (!taxApiService.validateApiKey(apiKey)) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+        Item updatedItem =
+                taxApiService.updateItemPrice(
+                        id, item.getBasePrice()
+                );
+        if (updatedItem == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedItem);
     }
 
     /**

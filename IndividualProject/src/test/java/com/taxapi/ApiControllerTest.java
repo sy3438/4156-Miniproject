@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -71,6 +72,16 @@ class ApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"PS5\",\"category\":\"electronics\",\"basePrice\":600}"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateItemPriceTest() throws Exception {
+        mockMvc.perform(patch("/v1/items/item-1")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"basePrice\":500}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.basePrice").value(500.0));
     }
 
     @Test
