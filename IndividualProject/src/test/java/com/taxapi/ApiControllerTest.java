@@ -120,4 +120,12 @@ class ApiControllerTest {
                         .header("X-API-Key", VALID_KEY))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void getItemsFilterTest() throws Exception {
+        mockMvc.perform(get("/v1/items")
+                        .param("category", "electronics")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isOk());
+    }
 }

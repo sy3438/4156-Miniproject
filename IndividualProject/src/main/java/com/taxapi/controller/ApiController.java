@@ -1,5 +1,6 @@
 package com.taxapi.controller;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,20 +101,29 @@ public final class ApiController {
      * Gets all items.
      *
      * @param apiKey API key
+     * @param category item category
+     * @param q item name
      * @return list of items
      * @throws IOException if an I/O error occurs
      */
     @GetMapping("/items")
     public ResponseEntity<List<Item>> getItems(
-        @RequestHeader("X-API-Key")
-        final String apiKey
+            @RequestHeader("X-API-Key")
+            final String apiKey,
+            @RequestParam(required = false)
+            final String category,
+            @RequestParam(required = false)
+            final String q
     ) throws IOException {
         if (!taxApiService.validateApiKey(apiKey)) {
             return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .build();
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
         }
-        List<Item> items = taxApiService.getItems();
+        List<Item> items = taxApiService.getItems(
+                category,
+                q
+        );
         return ResponseEntity.ok(items);
     }
 
