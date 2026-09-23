@@ -136,6 +136,16 @@ class TaxApiServiceUnitTests {
         assertTrue(supported.getCategories().contains("electronics"));
     }
 
+    @Test
+    void getItemsFilterTest() throws Exception {
+        var items = service.getItems(
+                "electronics",
+                null
+        );
+
+        assertEquals(1, items.size());
+    }
+
 
 
 

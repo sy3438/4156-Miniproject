@@ -179,6 +179,33 @@ public final class TaxApiService {
     }
 
     /**
+     * Gets all items with a category and name.
+     *
+     * @param category the item category
+     * @param q the item name
+     * @return filtered items
+     * @throws IOException if an I/O error occurs
+     */
+    public List<Item> getItems(
+            final String category,
+            final String q
+    ) throws IOException {
+        List<Item> items = getItems();
+
+        return items.stream()
+                .filter(item ->
+                        category == null
+                                || item.getCategory().equalsIgnoreCase(category)
+                )
+                .filter(item ->
+                        q == null
+                                || item.getName().toLowerCase()
+                                .contains(q.toLowerCase())
+                )
+                .toList();
+    }
+
+    /**
      * Gets an item by ID.
      *
      * @param id the item ID
