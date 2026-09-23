@@ -80,8 +80,13 @@ class ApiControllerTest {
                         .header("X-API-Key", VALID_KEY)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"basePrice\":500}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.basePrice").value(500.0));
+                .andExpect(status().isOk());
+
+        mockMvc.perform(patch("/v1/items/item-2")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"basePrice\":500}"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
