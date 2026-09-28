@@ -146,6 +146,79 @@ class TaxApiServiceUnitTests {
         assertEquals(1, items.size());
     }
 
+    @Test
+    void createDuplicateClientTest() throws Exception {
+        var client = service.createClient("Alice");
+
+        assertEquals(null, client);
+    }
+
+    @Test
+    void updateItemPriceNotFoundTest() throws Exception {
+        var item = service.updateItemPrice(
+                "item-does-not-exist",
+                500.00
+        );
+
+        assertEquals(null, item);
+    }
+
+    @Test
+    void getItemsNameFilterTest() throws Exception {
+        var items = service.getItems(
+                null,
+                "Lap"
+        );
+
+        assertEquals(1, items.size());
+    }
+
+    @Test
+    void getItemsNoMatchTest() throws Exception {
+        var items = service.getItems(
+                "clothing",
+                null
+        );
+
+        assertEquals(0, items.size());
+    }
+
+    @Test
+    void calculateTaxWithItemIdTest() throws Exception {
+        TaxQuoteRequest request = new TaxQuoteRequest();
+        request.setState("CA");
+        request.setItemId("item-1");
+
+        TaxQuoteResponse response = service.calculateTax(request);
+
+        assertNotNull(response);
+        assertEquals(999.99, response.getPrice());
+        assertEquals(0.0725, response.getTaxRate());
+    }
+
+    @Test
+    void calculateTaxItemNotFoundTest() throws Exception {
+        TaxQuoteRequest request = new TaxQuoteRequest();
+        request.setState("CA");
+        request.setItemId("item-does-not-exist");
+
+        TaxQuoteResponse response = service.calculateTax(request);
+
+        assertEquals(null, response);
+    }
+
+    @Test
+    void calculateTaxRateNotFoundTest() throws Exception {
+        TaxQuoteRequest request = new TaxQuoteRequest();
+        request.setState("TX");
+        request.setPrice(100.00);
+        request.setCategory("electronics");
+
+        TaxQuoteResponse response = service.calculateTax(request);
+
+        assertEquals(null, response);
+    }
+
 
 
 

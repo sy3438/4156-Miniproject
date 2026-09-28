@@ -128,4 +128,99 @@ class ApiControllerTest {
                         .header("X-API-Key", VALID_KEY))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void createDuplicateClientTest() throws Exception {
+        mockMvc.perform(post("/v1/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Alice\"}"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void createItemInvalidKeyTest() throws Exception {
+        mockMvc.perform(post("/v1/items")
+                        .header("X-API-Key", "wrong-key")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"PS5\",\"category\":\"electronics\",\"basePrice\":600}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getItemsInvalidKeyTest() throws Exception {
+        mockMvc.perform(get("/v1/items")
+                        .header("X-API-Key", "wrong-key"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getItemByIdInvalidKeyTest() throws Exception {
+        mockMvc.perform(get("/v1/items/item-1")
+                        .header("X-API-Key", "wrong-key"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getItemByIdNotFoundTest() throws Exception {
+        mockMvc.perform(get("/v1/items/item-does-not-exist")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateItemPriceInvalidKeyTest() throws Exception {
+        mockMvc.perform(patch("/v1/items/item-1")
+                        .header("X-API-Key", "wrong-key")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"basePrice\":500}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void updateItemPriceNotFoundTest() throws Exception {
+        mockMvc.perform(patch("/v1/items/item-does-not-exist")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"basePrice\":500}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteItemInvalidKeyTest() throws Exception {
+        mockMvc.perform(delete("/v1/items/item-1")
+                        .header("X-API-Key", "wrong-key"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteItemNotFoundTest() throws Exception {
+        mockMvc.perform(delete("/v1/items/item-does-not-exist")
+                        .header("X-API-Key", VALID_KEY))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void calculateTaxInvalidKeyTest() throws Exception {
+        mockMvc.perform(post("/v1/tax/quote")
+                        .header("X-API-Key", "wrong-key")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"state\":\"CA\",\"price\":1000,\"category\":\"electronics\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void calculateTaxNotFoundTest() throws Exception {
+        mockMvc.perform(post("/v1/tax/quote")
+                        .header("X-API-Key", VALID_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"state\":\"TX\",\"price\":1000,\"category\":\"electronics\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getSupportedInvalidKeyTest() throws Exception {
+        mockMvc.perform(get("/v1/supported")
+                        .header("X-API-Key", "wrong-key"))
+                .andExpect(status().isUnauthorized());
+    }
 }
