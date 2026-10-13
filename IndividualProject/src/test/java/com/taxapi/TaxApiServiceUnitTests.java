@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.file.Files;
@@ -88,6 +89,13 @@ class TaxApiServiceUnitTests {
         );
 
         assertEquals(500.00, item.getBasePrice());
+
+        var missingItem = service.updateItemPrice(
+                "item-2",
+                500.00
+        );
+
+        assertNull(missingItem);
     }
 
     @Test
@@ -142,8 +150,17 @@ class TaxApiServiceUnitTests {
                 "electronics",
                 null
         );
-
         assertEquals(1, items.size());
+        var nameItems = service.getItems(
+                null,
+                "lap"
+        );
+        assertEquals(1, nameItems.size());
+        var noItems = service.getItems(
+                "clothing",
+                null
+        );
+        assertEquals(0, noItems.size());
     }
 
     @Test

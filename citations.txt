@@ -6,3 +6,6 @@ JUnit testing guide.
 
 https://www.jacoco.org/jacoco/trunk/doc/
 Code coverage guide.
+
+https://chatgpt.com/
+ChatGPT was used to help set up the GitHub Actions CI workflow, improve test coverage, and create the State Tax Comparison client application.
